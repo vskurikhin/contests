@@ -9,12 +9,37 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
+	"github.com/stretchr/testify/assert"
 	"os"
+	"strings"
 	"testing"
 	"time"
 )
 
+func TestDo(t *testing.T) {
+	var tests = []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{name: "Test case #0",
+			input: "0\n0\n0\n",
+			want:  "0\n",
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			var b bytes.Buffer
+			w := bufio.NewWriter(&b)
+			wrap(strings.NewReader(test.input), w, do)
+			got := b.String()
+			assert.Equal(t, test.want, got)
+		})
+	}
+}
 func TestMain(m *testing.M) {
 	flag.Parse()
 	exitCode := m.Run()
